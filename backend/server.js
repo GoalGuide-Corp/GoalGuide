@@ -17,3 +17,6 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);  // Server startup message
 });
+
+const goalsRouter = require('./routes/goals');
+app.use('/goals', goalsRouter);
