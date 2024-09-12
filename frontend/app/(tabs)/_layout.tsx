@@ -1,9 +1,8 @@
-import { Tabs } from 'expo-router';
+import { Tabs } from 'expo-router'; // Keeping your tab navigation system
 import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '../../constants/Colors';  // Go back to 'constants'
+import { useColorScheme } from '../../hooks/useColorScheme';  // Go back to 'hooks'
+import TabBarIcon from '../../components/navigation/TabBarIcon';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -11,27 +10,29 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint, // Customizing tab colors
+        headerShown: false, // You can toggle this to show/hide header
+      }}
+    >
+      {/* Home Tab */}
       <Tabs.Screen
-        name="index"
+        name="Home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />, // Customize icon for Home tab
         }}
       />
+
+      {/* Profile Tab */}
       <Tabs.Screen
-        name="explore"
+        name="Profile"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />, // Customize icon for Profile tab
         }}
       />
+
+      {/* Add more screens here */}
     </Tabs>
   );
 }
