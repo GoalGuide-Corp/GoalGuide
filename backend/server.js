@@ -20,3 +20,6 @@ app.listen(port, () => {
 
 const goalsRouter = require('./routes/goals');
 app.use('/goals', goalsRouter);
+
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
