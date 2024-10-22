@@ -14,4 +14,14 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// GET request to retrieve all goals
+router.get('/', async (req, res) => {
+    try {
+      const goals = await Goal.find();  // Retrieve all goals
+      res.status(200).json(goals);      // Send goals as a response
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
 module.exports = router;
