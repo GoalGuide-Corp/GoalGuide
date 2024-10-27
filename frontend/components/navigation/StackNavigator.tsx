@@ -1,9 +1,15 @@
 // navigation/StackNavigator.tsx
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../components/LoginScreen';
-import MainScreen from '../components/MainScreen';
+import LoginScreen from '../LoginScreen';
+import MainScreen from '../MainScreen';
 
-const Stack = createNativeStackNavigator();
+// Define the type for navigation parameters
+export type StackParamList = {
+    Login: undefined;
+    Main: undefined;
+};
+
+const Stack = createNativeStackNavigator<StackParamList>();
 
 function AppNavigator() {
     return (

@@ -1,23 +1,15 @@
-// frontend/components/LoginScreen.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, Animated } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from './navigation/StackNavigator';
+import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
 import axios from 'axios'; // Import axios for error handling
 
-
-type LoginScreenNavigationProp = NativeStackNavigationProp<StackParamList, 'Login'>;
-
-type Props = {
-    navigation: LoginScreenNavigationProp;
-};
-
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
+const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('Welcome to Goal Tracker!');
     const [fadeAnim] = useState(new Animated.Value(0));
+    const router = useRouter(); // Use router for navigation
 
     React.useEffect(() => {
         Animated.timing(fadeAnim, {
@@ -29,17 +21,20 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
     const handleLogin = async () => {
         try {
-            // sends logins request to backend
+            // Send login request to backend
             const response = await axiosInstance.post('/auth/login', {
                 username,
                 password,
             });
 
-            // get token from repsone
+            // Get token from response
             const { token } = response.data;
-            
+
+            // Store token in local storage for later use
+            localStorage.setItem('token', token);
+
             console.log('Login successful:', token);
-            navigation.navigate('Main');
+            router.push('/main'); // Navigate to the Main screen
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
                 console.error('Login failed:', error.response.data.message);
