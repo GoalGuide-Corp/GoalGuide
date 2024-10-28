@@ -1,23 +1,21 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = () => {
     const router = useRouter();
 
-    const handleLogout = () => {
-        // Clear token from local storage on logout
-        localStorage.removeItem('token');
-        router.push('/login'); // Navigate back to the Login screen
+    const handleLogout = async () => {
+        // Clear token from AsyncStorage on logout
+        await AsyncStorage.removeItem('token');
+        router.push('/login');
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.welcomeText}>Welcome to the Goal Tracker App!</Text>
-            <Button
-                title="Log Out"
-                onPress={handleLogout}
-            />
+            <Button title="Log Out" onPress={handleLogout} />
         </View>
     );
 };

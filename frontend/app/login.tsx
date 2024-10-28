@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
-import axios from 'axios'; // Import axios for error handling
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('Welcome to Goal Tracker!');
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [message, setMessage] = useState<string>('Welcome to Goal Tracker!');
     const [fadeAnim] = useState(new Animated.Value(0));
-    const router = useRouter(); // Use router for navigation
+    const router = useRouter();
 
-    React.useEffect(() => {
+    useEffect(() => {
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 2000,
@@ -21,20 +22,16 @@ const LoginScreen = () => {
 
     const handleLogin = async () => {
         try {
-            // Send login request to backend
             const response = await axiosInstance.post('/auth/login', {
                 username,
                 password,
             });
 
-            // Get token from response
             const { token } = response.data;
-
-            // Store token in local storage for later use
-            localStorage.setItem('token', token);
+            await AsyncStorage.setItem('token', token);
 
             console.log('Login successful:', token);
-            router.push('/main'); // Navigate to the Main screen
+            router.push('/main');
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
                 console.error('Login failed:', error.response.data.message);
@@ -65,6 +62,7 @@ const LoginScreen = () => {
                 secureTextEntry
             />
             <Button title="Login" onPress={handleLogin} />
+            <Button title="Create Account" onPress={() => router.push('./createAccount')} />
         </View>
     );
 };
