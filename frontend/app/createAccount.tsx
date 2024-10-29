@@ -1,38 +1,44 @@
-// frontend/app/createAccount.tsx
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
 
 const CreateAccount = () => {
-    const [username, setUsername] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [message, setMessage] = useState<string>('');
     const router = useRouter();
 
     const handleRegister = async () => {
+        // Basic email validation check
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setMessage("Please enter a valid email address.");
+            return;
+        }
+    
         try {
-            const response = await axiosInstance.post('/auth/register', {
-                username,
+            await axiosInstance.post('/auth/register', {
+                email, 
                 password,
             });
-
+    
             setMessage('Account created successfully! Redirecting...');
             setTimeout(() => router.push('/login'), 2000); // Redirect to login after 2 seconds
         } catch (error: any) {
             setMessage(error.response?.data?.message || 'An error occurred during registration');
         }
     };
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Create Account</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
                 autoCapitalize="none"
             />
             <TextInput

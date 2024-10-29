@@ -6,13 +6,14 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
-    const [username, setUsername] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [message, setMessage] = useState<string>('Welcome to Goal Tracker!');
-    const [fadeAnim] = useState(new Animated.Value(0));
+    const [fadeAnim] = useState(new Animated.Value(0)); // Initialize fade animation value
     const router = useRouter();
 
     useEffect(() => {
+        // Animate the opacity to 1 over 2 seconds
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 2000,
@@ -23,7 +24,7 @@ const LoginScreen = () => {
     const handleLogin = async () => {
         try {
             const response = await axiosInstance.post('/auth/login', {
-                username,
+                email,
                 password,
             });
 
@@ -45,13 +46,17 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/logo.png')} style={styles.logo} />
+            {/* Apply fadeAnim to logo opacity */}
+            <Animated.Image 
+                source={require('../assets/logo.png')} 
+                style={[styles.logo, { opacity: fadeAnim }]} 
+            />
             <Animated.Text style={[styles.message, { opacity: fadeAnim }]}>{message}</Animated.Text>
             <TextInput
                 style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
                 autoCapitalize="none"
             />
             <TextInput

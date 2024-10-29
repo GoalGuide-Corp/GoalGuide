@@ -8,15 +8,15 @@ const JWT_SECRET = 'your_secret_key';
 
 // Login route
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     
     try {
-        // Finds user by username
-        const user = await User.findOne({ username });
+        // Finds user by email
+        const user = await User.findOne({ email });
         
         // Checks if user exists and password is valid
         if (!user || !(await user.validatePassword(password))) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Email or password is invalid' });
         }
 
         // Generates JWT
@@ -31,18 +31,18 @@ router.post('/login', async (req, res) => {
 });
 
 // Creates Account route
-router.post('/create-account', async (req, res) => {
-    const { username, password } = req.body;
+router.post('/register', async (req, res) => {
+    const { email, password } = req.body;
     
     try {
         // Checks if username is already taken
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Username is already taken' });
+            return res.status(400).json({ message: 'This email has already been used to create an account' });
         }
 
         // Creates a new user and set the password
-        const newUser = new User({ username });
+        const newUser = new User({ email });
         await newUser.setPassword(password);
         await newUser.save();
 

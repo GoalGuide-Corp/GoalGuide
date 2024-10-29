@@ -1,21 +1,31 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, Animated } from 'react-native';
 
 const MainScreen = () => {
-    const router = useRouter();
+    const [fadeAnim] = useState(new Animated.Value(0));
+    const [showInitialMessage, setShowInitialMessage] = useState(true);
 
-    const handleLogout = async () => {
-        // Clear token from AsyncStorage on logout
-        await AsyncStorage.removeItem('token');
-        router.push('/login');
-    };
+    useEffect(() => {
+        // Fade in the logo and initial message
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 4000, // 4 seconds
+            useNativeDriver: true,
+        }).start(() => {
+            // After 4 seconds, switch the message
+            setShowInitialMessage(false);
+        });
+    }, [fadeAnim]);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Welcome to the Goal Tracker App!</Text>
-            <Button title="Log Out" onPress={handleLogout} />
+            <Image
+                source={require('../assets/logo.png')}
+                style={styles.logo}
+            />
+            <Animated.Text style={[styles.message, { opacity: fadeAnim }]}>
+                {showInitialMessage ? 'Goal Guide' : 'Welcome to the Goal Tracker App!'}
+            </Animated.Text>
         </View>
     );
 };
@@ -25,12 +35,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20,
+        backgroundColor: '#F5E1C8', // Light brown background
     },
-    welcomeText: {
-        fontSize: 24,
+    logo: {
+        width: 150,
+        height: 150,
         marginBottom: 20,
+    },
+    message: {
+        fontSize: 24,
+        color: '#333',
         textAlign: 'center',
+        marginTop: 20,
     },
 });
 
