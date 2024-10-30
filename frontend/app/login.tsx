@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, StyleSheet, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
@@ -33,8 +32,9 @@ const LoginScreen = () => {
 
             console.log('Login successful:', token);
             router.push('/main');
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response) {
+        } catch (error: any) {
+            // Simplified error handling without axios.isAxiosError
+            if (error.response && error.response.data && error.response.data.message) {
                 console.error('Login failed:', error.response.data.message);
                 setMessage('Invalid username or password');
             } else {
