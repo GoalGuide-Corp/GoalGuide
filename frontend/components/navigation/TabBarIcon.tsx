@@ -1,9 +1,9 @@
-import React from 'react';
-import { Ionicons } from '@expo/vector-icons';  // Assuming you're using Expo's icon library
+// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 
-// Define the valid icon names that can be used with Ionicons
-type IoniconNames = keyof typeof Ionicons.glyphMap;
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { type IconProps } from '@expo/vector-icons/build/createIconSet';
+import { type ComponentProps } from 'react';
 
-export default function TabBarIcon(props: { name: IoniconNames; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
+  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
 }

@@ -31,18 +31,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "eas": {
-        "projectId": "15874167-0d16-4f4a-a646-15199e33c386"
-      }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/15874167-0d16-4f4a-a646-15199e33c386"
-    },
-    "owner": "goalguide"
+    }
   }
 }

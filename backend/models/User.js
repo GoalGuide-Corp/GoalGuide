@@ -1,29 +1,18 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-// Define the schema for users
 const userSchema = new mongoose.Schema({
-    userName: {
-        type: String,
-        required: true,
-        unique: true 
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true 
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    // Add any additional fields if necessary, like roles, profile data, etc.
+    email: { type: String, unique: true, required: true },
+    passwordHash: { type: String, required: true },
 });
 
-// Use the `userSchema` to create the `User` model
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+// Password hashing
+userSchema.methods.setPassword = async function(password) {
+    this.passwordHash = await bcrypt.hash(password, 10);
+};
 
-module.exports = User;
+userSchema.methods.validatePassword = async function(password) {
+    return await bcrypt.compare(password, this.passwordHash);
+};
+
+module.exports = mongoose.model('User', userSchema);
