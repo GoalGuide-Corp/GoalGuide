@@ -20,7 +20,7 @@ const MainScreen = () => {
     return (
         <View style={styles.container}>
             <Image
-                source={require('../assets/logo.png')}
+                source={require('../assets/images/GoalGuide_Logo.png')}
                 style={styles.logo}
             />
             <Animated.Text style={[styles.message, { opacity: fadeAnim }]}>

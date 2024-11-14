@@ -6,8 +6,12 @@ const mongoose = require('mongoose');
 const cors = require('cors'); // Optional, only if needed for cross-origin requests
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Parse JSON bodies
 app.use(express.json());
-app.use(cors()); // Enable CORS if required
 
 // Connecting to MongoDB using Mongoose
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/goaltracker', {

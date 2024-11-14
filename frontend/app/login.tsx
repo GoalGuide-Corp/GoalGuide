@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, Animated } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const { width, height } = Dimensions.get('window'); // Get device width and height
+
 const LoginScreen = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [message, setMessage] = useState<string>('Welcome to Goal Tracker!');
-    const [fadeAnim] = useState(new Animated.Value(0)); // Initialize fade animation value
+    const [message, setMessage] = useState<string>('Goal Guide');
+    const [fadeAnim] = useState(new Animated.Value(0));
     const router = useRouter();
 
     useEffect(() => {
-        // Animate the opacity to 1 over 2 seconds
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 2000,
@@ -26,48 +27,45 @@ const LoginScreen = () => {
                 email,
                 password,
             });
-
             const { token } = response.data;
             await AsyncStorage.setItem('token', token);
-
-            console.log('Login successful:', token);
             router.push('/main');
         } catch (error: any) {
-            // Simplified error handling without axios.isAxiosError
-            if (error.response && error.response.data && error.response.data.message) {
-                console.error('Login failed:', error.response.data.message);
-                setMessage('Invalid username or password');
-            } else {
-                console.error('An unexpected error occurred:', error);
-                setMessage('An unexpected error occurred');
-            }
+            setMessage(error.response?.data?.message || 'An error occurred');
         }
     };
 
     return (
         <View style={styles.container}>
-            {/* Apply fadeAnim to logo opacity */}
-            <Animated.Image 
-                source={require('../assets/logo.png')} 
-                style={[styles.logo, { opacity: fadeAnim }]} 
+            <Image 
+                source={require('../assets/images/GoalGuide_Logo.png')} 
+                style={styles.backgroundLogo} 
             />
-            <Animated.Text style={[styles.message, { opacity: fadeAnim }]}>{message}</Animated.Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <Button title="Login" onPress={handleLogin} />
-            <Button title="Create Account" onPress={() => router.push('./createAccount')} />
+            <Animated.View style={[styles.centerContent, { opacity: fadeAnim }]}>
+                <Text style={styles.brandName}>{message}</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                    placeholderTextColor="#666"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    placeholderTextColor="#666"
+                />
+                <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push('./createAccount')}>
+                    <Text style={styles.createAccountText}>Create Account</Text>
+                </TouchableOpacity>
+            </Animated.View>
         </View>
     );
 };
@@ -75,27 +73,51 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
-        padding: 20,
+        alignItems: 'center',
+        backgroundColor: '#F5E1C8',
     },
-    logo: {
-        width: 100,
-        height: 100,
-        marginBottom: 20,
+    backgroundLogo: {
+        position: 'absolute',
+        width: width * 1.2, // Scale logo based on screen width
+        height: height * 1.2, // Scale height for better fit
+        resizeMode: 'contain',
+        opacity: 0.08,
+        top: height * 0.1, // Adjust positioning for dynamic centering
     },
-    message: {
-        fontSize: 18,
+    centerContent: {
+        width: width * 0.8, // Responsive width
+        alignItems: 'center',
+    },
+    brandName: {
+        fontSize: width < 400 ? 28 : 32, // Adjust font size for smaller screens
+        fontWeight: 'bold',
         color: '#333',
-        marginBottom: 20,
+        marginBottom: 30,
     },
     input: {
         width: '100%',
-        padding: 10,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
+        padding: 12,
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderRadius: 10,
+        marginVertical: 8,
+    },
+    loginButton: {
+        backgroundColor: '#D4A373',
+        paddingVertical: 12,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 15,
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    createAccountText: {
+        color: '#D4A373',
+        fontWeight: 'bold',
+        marginTop: 15,
     },
 });
 
