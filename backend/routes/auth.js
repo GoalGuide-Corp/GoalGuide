@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-
 const JWT_SECRET = 'your_secret_key'; 
 
 // Login route
@@ -30,7 +29,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Creates Account route
+// Register route
 router.post('/register', async (req, res) => {
     const { email, password } = req.body;
     

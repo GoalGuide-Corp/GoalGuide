@@ -1,23 +1,31 @@
-// navigation/StackNavigator.tsx
+/*
+// frontend/components/navigation/StackNavigator.tsx
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import LoginScreen from '../LoginScreen';
-// import MainScreen from '../MainScreen';
+import IntroScreen from '../../app/IntroScreen';
+import OnboardingScreen from '../../app/onboarding';
+import LoginScreen from '../../app/login';
+import MainScreen from '../../app/main';
 
-// Define the type for navigation parameters
-export type StackParamList = {
+export type RootStackParamList = {
+    Intro: undefined;
+    Onboarding: undefined;
     Login: undefined;
     Main: undefined;
 };
 
-const Stack = createNativeStackNavigator<StackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function AppNavigator() {
+const AppNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Navigator initialRouteName="Intro">
+            <Stack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
-}
+};
 
 export default AppNavigator;
+*/

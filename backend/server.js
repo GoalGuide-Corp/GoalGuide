@@ -8,7 +8,7 @@ const cors = require('cors'); // Optional, only if needed for cross-origin reque
 const app = express();
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({ origin: '*' })); // Explicitly allow all origins for testing
 
 // Parse JSON bodies
 app.use(express.json());
@@ -27,6 +27,9 @@ app.use('/goals', goalsRouter);
 
 const authRouter = require('./routes/auth');
 app.use('/auth', authRouter);
+
+const onboardingRouter = require('./routes/onboarding');  // Add onboarding router
+app.use('/onboarding', onboardingRouter);                 // Add onboarding route
 
 // Start server
 const port = process.env.PORT || 5000;
