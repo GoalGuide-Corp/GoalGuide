@@ -41,9 +41,3 @@ GoalGuide uses a variety of testing tools to ensure functionality, performance, 
 
 ## **Acknowledgments**
 Special thanks to the professor, our peers, and everyone who contributed to making GoalGuide a reality. Your feedback and support have been invaluable!
-
-
-## **Contact**
-If you have any questions or suggestions, feel free to reach out:
-- **Email**: support@goalguide.com
-- **GitHub Issues**: [Report a Bug](https://github.com/GoalGuide-Corp/GoalGuide/issues)
