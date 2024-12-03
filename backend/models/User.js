@@ -7,11 +7,11 @@ const userSchema = new mongoose.Schema({
 });
 
 // Password hashing
-userSchema.methods.setPassword = async function(password) {
+userSchema.methods.setPassword = async function (password) {
     this.passwordHash = await bcrypt.hash(password, 10);
 };
 
-userSchema.methods.validatePassword = async function(password) {
+userSchema.methods.validatePassword = async function (password) {
     return await bcrypt.compare(password, this.passwordHash);
 };
 

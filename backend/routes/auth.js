@@ -1,58 +1,62 @@
 const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const JWT_SECRET = 'your_secret_key'; 
+// Hardcoded JWT secret for consistency
+const JWT_SECRET = 'S3cur3T0ken#12345$!';
+const router = express.Router();
 
 // Login route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    
+
     try {
-        // Finds user by email
         const user = await User.findOne({ email });
-        
-        // Checks if user exists and password is valid
+
         if (!user || !(await user.validatePassword(password))) {
             return res.status(401).json({ message: 'Email or password is invalid' });
         }
 
-        // Generates JWT
+        // Generate JWT and include userId
         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        // Sends token back to the client
-        res.json({ token });
+        // Include userId in the response
+        res.json({ token, userId: user._id });
     } catch (error) {
         console.error('Error during login:', error.message);
-        res.status(500).json({ message: 'An error occurred' });
+        res.status(500).json({ message: 'An error occurred during login' });
     }
 });
 
 // Register route
 router.post('/register', async (req, res) => {
     const { email, password } = req.body;
-    
+
     try {
-        // Checks if username is already taken
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'This email has already been used to create an account' });
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required.' });
         }
 
-        // Creates a new user and set the password
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format.' });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'This email is already in use.' });
+        }
+
         const newUser = new User({ email });
         await newUser.setPassword(password);
         await newUser.save();
 
-        // Generates JWT for the new user
         const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        // Sends token back to the client
-        res.json({ token });
+        res.json({ token, userId: newUser._id }); // Return both token and userId
     } catch (error) {
-        console.error('Error creating account:', error.message);
-        res.status(500).json({ message: 'An error occurred' });
+        console.error('Error during registration:', error.message);
+        res.status(500).json({ message: 'An error occurred during registration.' });
     }
 });
 

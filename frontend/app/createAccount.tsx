@@ -1,8 +1,8 @@
-// frontend/app/createAccount.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import axiosInstance from '../api/axiosInstance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CreateAccount = () => {
     const [email, setEmail] = useState('');
@@ -16,16 +16,17 @@ const CreateAccount = () => {
             setMessage("Please enter a valid email address.");
             return;
         }
-    
+
         try {
-            await axiosInstance.post('/register', { email, password });
+            await axiosInstance.post('/auth/register', { email, password });
             setMessage('Account created successfully! Redirecting...');
+            await AsyncStorage.setItem('isNewUser', 'true');
             setTimeout(() => router.push('/onboarding'), 2000);
         } catch (error: any) {
             setMessage(error.response?.data?.message || 'An error occurred during registration');
         }
     };
-    
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Create Account</Text>
@@ -51,29 +52,10 @@ const CreateAccount = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-    input: {
-        width: '100%',
-        padding: 10,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-    },
-    message: {
-        fontSize: 16,
-        color: 'green',
-        marginBottom: 20,
-    },
+    container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
+    title: { fontSize: 24, marginBottom: 20 },
+    input: { width: '100%', padding: 10, marginVertical: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 5 },
+    message: { fontSize: 16, color: 'green', marginBottom: 20 },
 });
 
 export default CreateAccount;
